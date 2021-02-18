@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Rade3App'
-    'rest_framework'
+    'Rade3App',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
