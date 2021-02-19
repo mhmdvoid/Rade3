@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Victim_Info (models.Model):
+class Victim_Request (models.Model):
 #  كٌ اسمك وعمرك إيميلك أو رقم جوالك أو حسابك في شبكات التواصل
     
     name = models.CharField(max_length=200)
@@ -22,11 +22,11 @@ class Victim_Info (models.Model):
 #مين مضايقك؟
 #اسمه أو جواله أو ايميله أو اسم حسابه مع الرابط)
 
-    blackmailer_name = models.CharField(max_length=200, null=True, blank=True)
-    blackmailer_email = models.EmailField(max_length=254 , null=True, blank=True)
-    blackmailer_account = models.CharField(max_length=200, null=True, blank=True)
+    blackmailer_name = models.CharField(max_length=200)
+    blackmailer_email = models.EmailField(max_length=254)
+    blackmailer_account = models.CharField(max_length=200)
 
-    Request_Status = models.oneToMany(Victim_Request_Status)
+     
 
   
     def __str__(self):
@@ -45,8 +45,11 @@ class Victim_Request_Status(models.Model):
     # النتيجه النهائيه
     results = models.TextField()
 
+
+ 
+    victim = models.OneToOneField(Victim_Request,primary_key=True,on_delete=models.CASCADE,)
     def __str__(self):
-        return self.completed
+        return self.Status
 
 #نصائح للتغلب على المعتدين
 
