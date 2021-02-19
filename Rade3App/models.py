@@ -1,57 +1,49 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 # Create your models here.
 class Victim_Request (models.Model):
-#  كٌ اسمك وعمرك إيميلك أو رقم جوالك أو حسابك في شبكات التواصل
     
     name = models.CharField(max_length=200)
     age = models.PositiveSmallIntegerField(null=True, blank=True)
-    email = models.EmailField(max_length=254)
-    #كيف ضايقك؟
-#(اشرح لي نوع الإيذاء وهل شتمكم أو هددكم أو طلب مال أو أجبركم على فعل معين..)
+    email = models.EmailField(max_length=254) 
+    description = models.TextField() 
 
-    description = models.TextField()
-   #في أي برنامج إلكتروني ضايقك؟
-#(اسم اللعبة أو التطبيق أو شبكة التواصل الاجتماعي مع رابطها)
+    program = models.TextField() 
 
-    program = models.TextField()
-  #  ممكن تصورلنا الشاشة؟ - رفع مرفقات
-#(أحتاج منك أي دليل ضده) 
-
-    files = models.ImageField(null = True)
-#مين مضايقك؟
-#اسمه أو جواله أو ايميله أو اسم حسابه مع الرابط)
+    files = models.ImageField(null = True) 
 
     blackmailer_name = models.CharField(max_length=200)
     blackmailer_email = models.EmailField(max_length=254)
     blackmailer_account = models.CharField(max_length=200)
 
-     
-
   
     def __str__(self):
         return self.name
 
+@receiver(post_save, sender = Victim_Request)
+def create_victim_request_status(sender, instance, created, **kwargs):
+    if created:
+        Victim_Request_Status.objects.create(victim=instance)
+        print('created')
+
+post_save.connect(create_victim_request_status, sender=Victim_Request)
+
 class Victim_Request_Status(models.Model):
     
-    # تاريخ الشكوى
-    create_date = models.DateField(auto_now=False, auto_now_add=True)
-   # استيفاء بيانات الشكوى
-    approved = models.BooleanField(null=True)
-    #التواصل مع المعتدي
-    contact_blackmailer = models.BooleanField()
-    #انقضاء المهلة
-    timeـout = models.BooleanField()
-    # النتيجه النهائيه
-    results = models.TextField()
-
-
+    create_date = models.DateField(auto_now=False, auto_now_add=True) 
+    approved = models.BooleanField(default=False)
+    contact_blackmailer = models.BooleanField(default=False)
+    timeـout = models.BooleanField(default=False)
+    results = models.TextField(null = True) 
  
-    victim = models.OneToOneField(Victim_Request,primary_key=True,on_delete=models.CASCADE,)
-    def __str__(self):
-        return self.Status
+    victim = models.OneToOneField(Victim_Request,on_delete=models.CASCADE)
+     
 
-#نصائح للتغلب على المعتدين
+
+
 
 class Resources(models.Model):
         
